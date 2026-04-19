@@ -1,22 +1,23 @@
+cat > src/pages/Pujas/PujaForm.js << 'EOF'
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import API from '../../api/axios';
 import toast from 'react-hot-toast';
 
 export default function PujaForm() {
-  const { id } = useParams();              // If editing: has ID, if new: undefined
+  const { id } = useParams();
   const isEditing = Boolean(id);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: '', description: '', significance: '',
-    benefits: '',        // Enter comma-separated, we'll split later
+    benefits: '',
     whenToPerform: '', duration: '',
     price: '', category: 'Special'
   });
-  // If editing, load existing data
-  useEffect(() => {...},
+
+  useEffect(() => {
     if (isEditing) {
       API.get(`/pujas/${id}`).then(({ data }) => {
         const p = data.data;
@@ -28,7 +29,7 @@ export default function PujaForm() {
         });
       });
     }
-  }, [id]);
+  }, [id, isEditing]);
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -43,7 +44,6 @@ export default function PujaForm() {
         price: Number(form.price),
         benefits: form.benefits.split(',').map(b => b.trim()).filter(Boolean)
       };
-
       if (isEditing) {
         await API.put(`/pujas/${id}`, payload);
         toast.success('Puja updated!');
@@ -60,10 +60,10 @@ export default function PujaForm() {
   };
 
   const fields = [
-    { name: 'name',          label: 'Puja Name',        type: 'text',   required: true },
-    { name: 'price',         label: 'Price (₹)',         type: 'number', required: true },
-    { name: 'duration',      label: 'Duration',          type: 'text',   placeholder: 'e.g. 2-3 hours' },
-    { name: 'whenToPerform', label: 'When to Perform',   type: 'text',   placeholder: 'e.g. Purnima, Mondays' },
+    { name: 'name',          label: 'Puja Name',       type: 'text',   required: true },
+    { name: 'price',         label: 'Price (₹)',        type: 'number', required: true },
+    { name: 'duration',      label: 'Duration',         type: 'text',   placeholder: 'e.g. 2-3 hours' },
+    { name: 'whenToPerform', label: 'When to Perform',  type: 'text',   placeholder: 'e.g. Purnima, Mondays' },
   ];
 
   return (
@@ -71,9 +71,7 @@ export default function PujaForm() {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">
         {isEditing ? 'Edit Puja' : 'Add New Puja'}
       </h1>
-
       <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 shadow-sm space-y-4">
-        {/* Simple text fields */}
         {fields.map(f => (
           <div key={f.name}>
             <label className="block text-sm font-medium text-gray-700 mb-1">{f.label}</label>
@@ -88,8 +86,6 @@ export default function PujaForm() {
             />
           </div>
         ))}
-
-        {/* Category */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
           <select
@@ -103,11 +99,9 @@ export default function PujaForm() {
             ))}
           </select>
         </div>
-
-        {/* Textareas */}
         {[
-          { name: 'description',  label: 'Description',    rows: 4 },
-          { name: 'significance', label: 'Significance',   rows: 3 },
+          { name: 'description',  label: 'Description',                rows: 4 },
+          { name: 'significance', label: 'Significance',               rows: 3 },
           { name: 'benefits',     label: 'Benefits (comma-separated)', rows: 2 },
         ].map(f => (
           <div key={f.name}>
@@ -121,8 +115,6 @@ export default function PujaForm() {
             />
           </div>
         ))}
-
-        {/* Buttons */}
         <div className="flex gap-3 pt-2">
           <button
             type="button"
@@ -143,3 +135,4 @@ export default function PujaForm() {
     </div>
   );
 }
+EOF

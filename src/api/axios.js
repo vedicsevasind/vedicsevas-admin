@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Base URL of your backend
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api'
+  baseURL: 'https://vedicsevas-backend.onrender.com/api'
 });
 
 // Before every request, automatically add the token from localStorage

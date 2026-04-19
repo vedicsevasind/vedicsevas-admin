@@ -1,4 +1,3 @@
-src/pages/Pujas/PujaForm.js << 'ENDOFFILE'
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import API from '../../api/axios';

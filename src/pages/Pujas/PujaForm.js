@@ -15,9 +15,8 @@ export default function PujaForm() {
     whenToPerform: '', duration: '',
     price: '', category: 'Special'
   });
-
   // If editing, load existing data
-  useEffect(() => {
+  useEffect(() => {...},
     if (isEditing) {
       API.get(`/pujas/${id}`).then(({ data }) => {
         const p = data.data;
